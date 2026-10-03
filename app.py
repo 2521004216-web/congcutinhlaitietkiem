@@ -1,11 +1,12 @@
 import streamlit as st
 
-st.image("logo.jpg")
+st.set_page_config(
     page_title="Tính lãi gửi tiết kiệm",
     page_icon="💰",
     layout="centered"
 )
 
+st.image("logo.jpg", width=150)
 st.title("💰 TÍNH LÃI GỬI TIẾT KIỆM_Lê Nguyễn Hồng Quyên")
 st.write("Nhập thông tin khoản tiền gửi để tính tiền lãi.")
 
