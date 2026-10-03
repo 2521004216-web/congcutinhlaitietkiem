@@ -6,7 +6,7 @@ st.set_page_config(
     layout="centered"
 )
 
-st.title("💰 TÍNH LÃI GỬI TIẾT KIỆM")
+st.title("💰 TÍNH LÃI GỬI TIẾT KIỆM_Lê Nguyễn Hồng Quyên")
 st.write("Nhập thông tin khoản tiền gửi để tính tiền lãi.")
 
 # Nhập số tiền gửi
