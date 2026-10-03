@@ -1,16 +1,39 @@
 import streamlit as st
 
+# =========================
+# CẤU HÌNH TRANG
+# =========================
+
 st.set_page_config(
     page_title="Tính lãi gửi tiết kiệm",
     page_icon="💰",
     layout="centered"
 )
 
+# Logo
 st.image("logo.jpg", width=150)
+
 st.title("💰 TÍNH LÃI GỬI TIẾT KIỆM_Lê Nguyễn Hồng Quyên")
 st.write("Nhập thông tin khoản tiền gửi để tính tiền lãi.")
 
-# Nhập số tiền gửi
+# =========================
+# BẢNG LÃI SUẤT CỐ ĐỊNH
+# =========================
+
+lai_suat_theo_ky_han = {
+    1: 2.0,
+    3: 2.5,
+    6: 4.0,
+    9: 4.5,
+    12: 5.0,
+    18: 5.5,
+    24: 5.8
+}
+
+# =========================
+# NHẬP SỐ TIỀN GỬI
+# =========================
+
 so_tien_gui = st.number_input(
     "💵 Số tiền gửi (VNĐ)",
     min_value=0,
@@ -18,62 +41,84 @@ so_tien_gui = st.number_input(
     step=1000000
 )
 
-# Nhập kỳ hạn
-ky_han = st.number_input(
-    "📅 Kỳ hạn (tháng)",
-    min_value=1,
-    max_value=120,
-    value=12,
-    step=1
+# =========================
+# CHỌN KỲ HẠN
+# =========================
+
+ky_han = st.selectbox(
+    "📅 Chọn kỳ hạn",
+    list(lai_suat_theo_ky_han.keys()),
+    format_func=lambda x: f"{x} tháng"
 )
 
-# Nhập lãi suất
-lai_suat = st.number_input(
-    "📈 Lãi suất (%/năm)",
-    min_value=0.0,
-    max_value=100.0,
-    value=5.0,
-    step=0.1
+# Tự động lấy lãi suất
+lai_suat = lai_suat_theo_ky_han[ky_han]
+
+# Hiển thị lãi suất tương ứng
+st.info(
+    f"📈 Lãi suất áp dụng cho kỳ hạn {ky_han} tháng: "
+    f"**{lai_suat:.2f}%/năm**"
 )
 
-# Chọn hình thức nhận lãi
+# =========================
+# HÌNH THỨC NHẬN LÃI
+# =========================
+
 hinh_thuc = st.selectbox(
     "💳 Hình thức nhận lãi",
-    ["Cuối kỳ", "Hàng tháng", "Hàng quý"]
+    [
+        "Cuối kỳ",
+        "Hàng tháng",
+        "Hàng quý"
+    ]
 )
 
-# Nút tính
+# =========================
+# NÚT TÍNH LÃI
+# =========================
+
 if st.button("🧮 TÍNH LÃI", use_container_width=True):
 
-    # Tính tổng tiền lãi
+    # Tổng tiền lãi
     tong_tien_lai = (
         so_tien_gui
         * (lai_suat / 100)
         * (ky_han / 12)
     )
 
-    # Tính tiền lãi định kỳ
+    # Tiền lãi định kỳ
     if hinh_thuc == "Cuối kỳ":
+
         tien_lai_dinh_ky = tong_tien_lai
+        don_vi = "cuối kỳ"
 
     elif hinh_thuc == "Hàng tháng":
+
         tien_lai_dinh_ky = (
             so_tien_gui
             * (lai_suat / 100)
             / 12
         )
+        don_vi = "mỗi tháng"
 
     else:
+
         tien_lai_dinh_ky = (
             so_tien_gui
             * (lai_suat / 100)
             / 4
         )
+        don_vi = "mỗi quý"
 
-    # Tổng gốc + lãi
+    # Tổng tiền gốc + lãi
     tong_tien = so_tien_gui + tong_tien_lai
 
+    # =========================
+    # HIỂN THỊ KẾT QUẢ
+    # =========================
+
     st.divider()
+
     st.subheader("📊 KẾT QUẢ")
 
     col1, col2 = st.columns(2)
@@ -97,7 +142,14 @@ if st.button("🧮 TÍNH LÃI", use_container_width=True):
 
     st.divider()
 
+    st.subheader("📋 Thông tin khoản gửi")
+
     st.write(f"**Số tiền gửi:** {so_tien_gui:,.0f} VNĐ")
     st.write(f"**Kỳ hạn:** {ky_han} tháng")
     st.write(f"**Lãi suất:** {lai_suat:.2f}%/năm")
     st.write(f"**Hình thức nhận lãi:** {hinh_thuc}")
+
+    st.success(
+        f"Bạn nhận **{tien_lai_dinh_ky:,.0f} VNĐ** tiền lãi "
+        f"{don_vi}."
+    )
