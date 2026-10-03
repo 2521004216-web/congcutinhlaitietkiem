@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(
+st.image("logo.jpg")
     page_title="Tính lãi gửi tiết kiệm",
     page_icon="💰",
     layout="centered"
